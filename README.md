@@ -4,7 +4,7 @@
  * @Author: zpliu
  * @Date: 2022-11-01 20:24:52
  * @LastEditors: zpliu
- * @LastEditTime: 2022-11-02 21:50:02
+ * @LastEditTime: 2022-11-02 22:02:47
  * @@param:
 -->
 
@@ -60,8 +60,7 @@ optional arguments:
 ```
 
 header of output 
-'geneId1','geneId2','isoformId1','IsofromId2',
-        'IntronCount1','IntronCount2','ConservedSiteCount','conservedSites'
+
 1. `geneId1` geneID from genome A 
 2. `geneId2` geneID from genome B
 3. `isoformId1` isoform ID from genome A
