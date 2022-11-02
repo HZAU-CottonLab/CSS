@@ -4,7 +4,7 @@
  * @Author: zpliu
  * @Date: 2022-11-01 20:24:52
  * @LastEditors: zpliu
- * @LastEditTime: 2022-11-02 22:02:47
+ * @LastEditTime: 2022-11-02 22:04:57
  * @@param:
 -->
 
@@ -18,7 +18,7 @@
 - pysam 
 - pyliftover
 
-> importance!, **you must to change th**e `lastz.py` **in this package to specify absolute patgs to software like lastz and UCSC et al**. 
+> **importance!, you must to change th**e `lastz.py` **in this package to specify absolute paths to software like lastz and UCSC et al**. 
 
 ```python
 #* lastz.py
@@ -59,7 +59,7 @@ optional arguments:
 
 ```
 
-header of output 
+### header of output 
 
 1. `geneId1` geneID from genome A 
 2. `geneId2` geneID from genome B
