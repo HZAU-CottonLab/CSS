@@ -4,12 +4,13 @@ version:
 Author: zpliu
 Date: 2022-11-01 20:34:25
 LastEditors: zpliu
-LastEditTime: 2022-11-02 20:59:28
+LastEditTime: 2022-11-03 14:44:49
 @param: 
 '''
 import pysam
 import pandas as pd 
 from gtf.isoform_annotate import Gene, gtf_read_gene
+import sys 
 
 class Gene_coordinate:
     def __init__(self,geneId,start,end,chrom,stand) -> None:
@@ -113,7 +114,10 @@ def get_geneObject(gtfFile,geneBedFile,HomoeologFile):
         geneObject.set_homoeologous(
             HomoeologDict.get(geneId,None)
         )
-        geneObject.set_isoformObject(geneIsoformDict.get(geneId).get_isoformArray())
+        try:
+            geneObject.set_isoformObject(geneIsoformDict.get(geneId).get_isoformArray())
+        except AttributeError:
+            sys.exit("gene {} is not in gtf".format(geneId))
         GeneDict[geneId] =GeneDict.get(
             geneId,geneObject
         )

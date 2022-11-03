@@ -4,15 +4,17 @@ version:
 Author: zpliu
 Date: 2022-11-01 20:30:23
 LastEditors: zpliu
-LastEditTime: 2022-11-02 21:42:11
+LastEditTime: 2022-11-03 15:37:21
 @param: 
 '''
+from operator import concat
 import pysam
 from gene_coordinate import fasta_seq, get_geneObject
 from lastz import lastz, matchRegion
 from tempfile import NamedTemporaryFile
 import pandas as pd
 import argparse
+import numpy as np
 
 def splicingSiteMap(gtfFileA, gtfFileB, geneABedFile, geneBBedFile, genomeFileA, genomeFileB, HomoeologousFile, windowSize=100):
     '''
@@ -137,13 +139,26 @@ def splicingSiteMap(gtfFileA, gtfFileB, geneABedFile, geneBBedFile, genomeFileA,
                 spliceArrayA = isoformA[6].split(";")
                 spliceArrayB = isoformB[6].split(";")
                 # * conservedSite
-                filterData = ConservedSplicingSite.loc[(ConservedSplicingSite[0].isin(spliceArrayA)) & (
+                filterData1 = ConservedSplicingSite.loc[(ConservedSplicingSite[0].isin(spliceArrayA)) & (
                     ConservedSplicingSite[1].isin(spliceArrayB))]
+                filterData2 = ConservedSplicingSite.loc[(ConservedSplicingSite[1].isin(spliceArrayA)) & (
+                    ConservedSplicingSite[0].isin(spliceArrayB))]
                 # * geneID isoformId, intronCountA,intronCountB
-                consevrvedSiteCount = filterData.shape[0]
-                conservedSiteText=";".join(
-                    filterData.apply(lambda x:"{}*{}".format(x[0],x[1]),axis=1)
-                )
+                consevrvedSiteCount = filterData1.shape[0]+filterData2.shape[0]
+                conservedSiteText=np.array([])
+                if filterData1.shape[0]!=0:
+                    conservedSiteText=np.hstack(
+                        [conservedSiteText,filterData1.apply(lambda x:"{}*{}".format(x[0],x[1]),axis=1).values]
+                    )
+                if filterData2.shape[0]!=0:
+                    conservedSiteText=np.hstack(
+                        [conservedSiteText,filterData2.apply(lambda x:"{}*{}".format(x[1],x[0]),axis=1).values]
+                    )
+            
+                #* unique Data
+                conservedSiteText=";".join(np.unique(conservedSiteText))
+                if conservedSiteText=="":
+                    conservedSiteText='None'
                 Gene_conservedSite.append(
                     (geneA, geneB, isoformA[0], isoformB[0],
                      isoformA[5]-1, isoformB[5]-1, consevrvedSiteCount,conservedSiteText)
