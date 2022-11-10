@@ -133,6 +133,12 @@ def splicingSiteMap(gtfFileA, gtfFileB, geneABedFile, geneBBedFile, genomeFileA,
                     )
         #! conserved site between genomes A and B
         ConservedSplicingSite = pd.DataFrame(ConservedSplicingSite)
+        if ConservedSplicingSite.shape[0]==0:
+            Gene_conservedSite.append(
+                    (geneA, geneB, "-", "-",
+                     "-", "-", 0,"None")
+            )
+            continue
         # * matchConserved Intron splicing site
         for isoformA in singlegeneObjecGeneA.isoform_splic_site:
             for isoformB in singlegeneObjecGeneB.isoform_splic_site:
@@ -144,7 +150,7 @@ def splicingSiteMap(gtfFileA, gtfFileB, geneABedFile, geneBBedFile, genomeFileA,
                 filterData2 = ConservedSplicingSite.loc[(ConservedSplicingSite[1].isin(spliceArrayA)) & (
                     ConservedSplicingSite[0].isin(spliceArrayB))]
                 # * geneID isoformId, intronCountA,intronCountB
-                consevrvedSiteCount = filterData1.shape[0]+filterData2.shape[0]
+                # consevrvedSiteCount = filterData1.shape[0]+filterData2.shape[0]
                 conservedSiteText=np.array([])
                 if filterData1.shape[0]!=0:
                     conservedSiteText=np.hstack(
@@ -156,6 +162,7 @@ def splicingSiteMap(gtfFileA, gtfFileB, geneABedFile, geneBBedFile, genomeFileA,
                     )
             
                 #* unique Data
+                consevrvedSiteCount=len(np.unique(conservedSiteText))
                 conservedSiteText=";".join(np.unique(conservedSiteText))
                 if conservedSiteText=="":
                     conservedSiteText='None'
